@@ -6,7 +6,7 @@
  * Time: 12:14
  */
 
-namespace app\components\notifications\controllers;
+namespace mpf\components\notifications\controllers;
 
 
 use app\components\Controller;

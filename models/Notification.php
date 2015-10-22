@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components\notifications\models;
+namespace mpf\components\notifications\models;
 
 use mpf\datasources\sql\DataProvider;
 use mpf\datasources\sql\DbModel;

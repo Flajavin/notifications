@@ -1,11 +1,11 @@
 <?php
 
-namespace app\php\components\notifications;
+namespace mpf\components\notifications;
 
-use app\components\notifications\models\Notification;
-use app\components\notifications\models\Subscriber;
-use app\components\notifications\models\Subscription;
-use app\components\notifications\models\Type;
+use mpf\components\notifications\models\Notification;
+use mpf\components\notifications\models\Subscriber;
+use mpf\components\notifications\models\Subscription;
+use mpf\components\notifications\models\Type;
 use mpf\base\Object;
 use mpf\helpers\ArrayHelper;
 use mpf\WebApp;

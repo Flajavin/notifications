@@ -5,11 +5,10 @@
  * Time: 12:01
  */
 
-namespace app\components\notifications\models;
+namespace mpf\components\notifications\models;
 
 use mpf\datasources\sql\DataProvider;
 use mpf\datasources\sql\DbModel;
-use mpf\datasources\sql\DbRelations;
 use mpf\datasources\sql\ModelCondition;
 
 /**

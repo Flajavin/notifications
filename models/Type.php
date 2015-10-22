@@ -6,7 +6,7 @@
  * Time: 15:38
  */
 
-namespace app\components\notifications\models;
+namespace mpf\components\notifications\models;
 
 
 use mpf\base\App;
