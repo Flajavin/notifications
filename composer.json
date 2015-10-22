@@ -14,7 +14,7 @@
   },
   "autoload": {
       "psr-4" : {
-          "mpf\\components\\notifications" : "/"
+          "mpf\\components\\notifications\\" : "/"
       }
   }
 }
