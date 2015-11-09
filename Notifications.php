@@ -49,6 +49,7 @@ class Notifications extends Object {
      */
     public static function addForSubscription($subscription, $url, $vars, $time = null, $excludeUser = null) {
         $subscription = Subscription::findByName($subscription);
+        $excludeUser = is_null($excludeUser) ? WebApp::get()->user()->id : $excludeUser;
         if (!$subscription) {
             WebApp::get()->error("Subscription not found!");
             return false; // subscription  not found
@@ -58,6 +59,9 @@ class Notifications extends Object {
             return true; // no subscribers found
         }
         foreach ($subscribers as $subscriber) {
+            if ($excludeUser && $subscriber->user_id == $excludeUser) {
+                continue;
+            }
             Notification::insert([
                 'type_id' => $subscription->type_id,
                 'user_id' => $subscriber->user_id,
