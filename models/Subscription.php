@@ -18,7 +18,7 @@ use mpf\datasources\sql\ModelCondition;
  * @property int $id
  * @property int $type_id
  * @property string $code
- * @property \app\components\notifications\models\Type $type
+ * @property \mpf\components\notifications\models\Type $type
  */
 class Subscription extends DbModel {
 
