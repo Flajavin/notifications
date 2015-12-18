@@ -58,6 +58,9 @@ class Type extends DbModel {
         if (!isset(self::$types[$name])) {
             trigger_error("A notification type for $name was not found!");
         }
+        if (!is_string($name)){
+            trigger_error("Invalid value: " . print_r($name, true));
+        }
         return self::$types[$name];
     }
 
