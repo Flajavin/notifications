@@ -45,9 +45,10 @@ class Type extends DbModel {
     /**
      * Get a Type model with the specified name.
      * @param string $name
-     * @return self;
+     * @param bool $noError
+     * @return self|null;
      */
-    public static function findByName($name) {
+    public static function findByName($name, $noError = false) {
         if (is_null(self::$types)) {
             $types = self::findAll();
             self::$types = [];
@@ -56,6 +57,9 @@ class Type extends DbModel {
             }
         }
         if (!isset(self::$types[$name])) {
+            if ($noError){
+                return null;
+            }
             trigger_error("A notification type for $name was not found!");
         }
         if (!is_string($name)){
