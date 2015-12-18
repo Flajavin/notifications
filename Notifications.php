@@ -29,7 +29,7 @@ class Notifications extends Object {
      */
     public static function add($type, $url, $vars, $user, $time = null) {
         $notification = new Notification();
-        $notification->type_id = Type::findByName($type);
+        $notification->type_id = Type::findByName($type)->id;
         $notification->user_id = $user;
         if (!is_null($time)) {
             $notification->time = is_numeric($time) ? date('Y-m-d H:i:s', $time) : $time;
