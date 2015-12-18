@@ -22,7 +22,7 @@ use mpf\WebApp;
  * @property string $vars_json
  * @property int $subscription_id
  * @property \app\models\User $user
- * @property \app\components\notifications\models\Type $type
+ * @property \mpf\components\notifications\models\Type $type
  */
 class Notification extends DbModel {
     /**

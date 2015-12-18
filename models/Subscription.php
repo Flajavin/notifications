@@ -54,7 +54,7 @@ class Subscription extends DbModel {
     public static function createByName($for, $type){
         $sub = new self();
         $sub->code = self::getHash($for);
-        $sub->type = Type::findByName($type)->id;
+        $sub->type_id = Type::findByName($type)->id;
         return $sub->save();
     }
 
