@@ -22,11 +22,11 @@ class Notifications extends Controller {
      * @return int
      */
     public function actionNew() {
-        return \app\php\components\notifications\Notifications::getNewNumber(isset($_POST['type']) ? $_POST['type'] : null);
+        return \mpf\components\notifications\Notifications::getNewNumber(isset($_POST['type']) ? $_POST['type'] : null);
     }
 
     public function actionNewList() {
-        $notifications = \app\php\components\notifications\Notifications::getLatestNew(isset($_POST['type']) ? $_POST['type'] : null, isset($_POST['limit']) ? $_POST['limit'] : 10, isset($_POST['offset']) ? $_POST['offset'] : 0);
+        $notifications = \mpf\components\notifications\Notifications::getLatestNew(isset($_POST['type']) ? $_POST['type'] : null, isset($_POST['limit']) ? $_POST['limit'] : 10, isset($_POST['offset']) ? $_POST['offset'] : 0);
         $list = [];
         foreach ($notifications as $notification){
             $list[] = [
