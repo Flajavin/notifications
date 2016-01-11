@@ -16,6 +16,7 @@
     'dataProvider' => $model->getDataProvider(),
     'columns' => [
         'name',
+        'title',
         'sms',
         'web',
         [

@@ -17,6 +17,7 @@
     'theme' => 'default-wide',
     'fields' => [
         'name',
+        'title',
         'description',
         [
             'name' => 'email',
