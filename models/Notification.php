@@ -16,6 +16,7 @@ use mpf\WebApp;
  * @property string $time
  * @property int $user_id
  * @property int $read
+ * @property int $sent
  * @property int $read_method
  * @property string $read_time
  * @property string $url_json
@@ -45,6 +46,7 @@ class Notification extends DbModel {
             'time' => 'Time',
             'user_id' => 'User',
             'read' => 'Read',
+            'sent' => 'Sent',
             'read_method' => 'Read Method',
             'read_time' => 'Read Time',
             'url_json' => 'Url Json',
@@ -69,7 +71,7 @@ class Notification extends DbModel {
      */
     public static function getRules() {
         return [
-            ["id, type_id, time, user_id, read, read_method, read_time, url_json, vars_json", "safe", "on" => "search"]
+            ["id, type_id, time, user_id, read, sent, read_method, read_time, url_json, vars_json", "safe", "on" => "search"]
         ];
     }
 
@@ -80,7 +82,7 @@ class Notification extends DbModel {
     public function getDataProvider() {
         $condition = new ModelCondition(['model' => __CLASS__]);
 
-        foreach (["id", "type_id", "time", "user_id", "read", "read_method", "read_time", "url_json", "vars_json"] as $column) {
+        foreach (["id", "type_id", "time", "user_id", "read", "sent", "read_method", "read_time", "url_json", "vars_json"] as $column) {
             if ($this->$column) {
                 $condition->compareColumn($column, $this->$column, true);
             }
