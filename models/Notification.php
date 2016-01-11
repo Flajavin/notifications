@@ -59,7 +59,7 @@ class Notification extends DbModel {
     public static function getRelations() {
         return [
             'user' => [DbRelations::BELONGS_TO, '\app\models\User', 'user_id'],
-            'type' => [DbRelations::BELONGS_TO, '\app\models\NotificationType', 'type_id']
+            'type' => [DbRelations::BELONGS_TO, '\mpf\components\notifications\models\Type', 'type_id']
         ];
     }
 
@@ -94,7 +94,7 @@ class Notification extends DbModel {
      * @return string
      */
     public function getURL() {
-        $url = json_decode($this->url_json);
+        $url = json_decode($this->url_json, true);
         if (is_string($url)) {
             return $url;
         }
