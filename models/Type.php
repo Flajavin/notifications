@@ -19,6 +19,7 @@ use mpf\datasources\sql\ModelCondition;
  * @package app\models
  * @property int $id
  * @property string $name
+ * @property string $title
  * @property string $description
  * @property string $email
  * @property string $sms
@@ -77,6 +78,7 @@ class Type extends DbModel {
         return [
             'id' => 'Id',
             'name' => 'Name',
+            'title' => 'Title',
             'description' => 'Description',
             'email' => 'Email',
             'sms' => 'Sms',
@@ -176,5 +178,41 @@ class Type extends DbModel {
             $text = str_replace("{\$$match}", $dbValue, $text);
         }
         return $text;
+    }
+
+    public function wantsEmail($userId){
+        if (!$this->email){
+            return false;
+        }
+
+        $settings = $this->getDb()->table("notifications_user2types")->compare(['user_id' => $userId, 'type_id' => $this->id])->first();
+        if (!$settings){
+            return true;
+        }
+        return (bool)$settings['email'];
+    }
+
+    public function wantsSMS($userId){
+        if (!$this->sms){
+            return false;
+        }
+
+        $settings = $this->getDb()->table("notifications_user2types")->compare(['user_id' => $userId, 'type_id' => $this->id])->first();
+        if (!$settings){
+            return true;
+        }
+        return (bool)$settings['sms'];
+    }
+
+    public function wantsMobile($userId){
+        if (!$this->mobile){
+            return false;
+        }
+
+        $settings = $this->getDb()->table("notifications_user2types")->compare(['user_id' => $userId, 'type_id' => $this->id])->first();
+        if (!$settings){
+            return true;
+        }
+        return (bool)$settings['mobile'];
     }
 }

@@ -16,7 +16,9 @@ class Notifier extends Command{
 
     public function actionIndex(){
         $unread = Notification::findAllByAttributes(['read' => 0, 'sent' => 0]);
-
+        foreach ($unread as $notification){
+            $notification->sendMail();
+        }
     }
 
 }

@@ -2,10 +2,12 @@
 
 namespace mpf\components\notifications\models;
 
+use mpf\base\App;
 use mpf\datasources\sql\DataProvider;
 use mpf\datasources\sql\DbModel;
 use mpf\datasources\sql\DbRelations;
 use mpf\datasources\sql\ModelCondition;
+use mpf\helpers\MailHelper;
 use mpf\WebApp;
 
 /**
@@ -109,5 +111,15 @@ class Notification extends DbModel {
      */
     public function getMessage($for = 'web') {
         return $this->type->getProcessedText($for, json_decode($this->vars_json));
+    }
+
+    public function sendMail(){
+        if (!$this->type->wantsEmail($this->user_id)){ // no need to mail this;
+            return true;
+        }
+        $name = App::get()->shortName;
+        $this->sent = 1;
+        $this->save();
+        return MailHelper::get()->send($this->user->email, "[$name]" . $this->type->title, $this->getMessage('email'));
     }
 }
