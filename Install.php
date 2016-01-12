@@ -44,13 +44,15 @@ class Install extends LogAwareObject {
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `user_id` int(10) unsigned NOT NULL,
   `read` tinyint(1) unsigned NOT NULL,
+  `sent` tinyint(1) unsigned NOT NULL,
   `read_method` tinyint(3) unsigned DEFAULT NULL,
   `read_time` datetime DEFAULT NULL,
   `url_json` varchar(200) NOT NULL,
   `vars_json` varchar(200) NOT NULL,
   `subscription_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
         $this->debug("Installing subscribers");
         App::get()->sql()->execQuery("DROP TABLE IF EXISTS `notifications_subscribers`");
@@ -59,7 +61,7 @@ class Install extends LogAwareObject {
   `user_id` int(10) unsigned NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`subscription_id`,`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
         $this->debug("Installing subscriptions");
         App::get()->sql()->execQuery("DROP TABLE IF EXISTS `notifications_subscriptions`");
         App::get()->sql()->execQuery("CREATE TABLE `notifications_subscriptions` (
@@ -67,12 +69,22 @@ class Install extends LogAwareObject {
   `type_id` smallint(5) unsigned NOT NULL,
   `code` char(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
         $this->debug("Installing categories");
+        App::get()->sql()->execQuery("DROP TABLE IF EXISTS `notification_user2types`");
+        App::get()->sql()->execQuery("CREATE TABLE `notifications_user2types` (
+  `user_id` int(10) unsigned NOT NULL,
+  `type_id` smallint(5) unsigned NOT NULL,
+  `email` tinyint(3) unsigned NOT NULL,
+  `sms` tinyint(3) unsigned NOT NULL,
+  `mobile` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`user_id`,`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
         App::get()->sql()->execQuery("DROP TABLE IF EXISTS `notification_types`");
         App::get()->sql()->execQuery("CREATE TABLE `notification_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
+  `title` varchar(150) NOT NULL,
   `description` varchar(256) NOT NULL,
   `email` text NOT NULL,
   `sms` varchar(256) NOT NULL,
