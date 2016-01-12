@@ -110,7 +110,10 @@ class Notification extends DbModel {
      * @return string
      */
     public function getMessage($for = 'web') {
-        return $this->type->getProcessedText($for, json_decode($this->vars_json));
+        $vars = json_decode($this->vars_json, true);
+        $vars['url'] = $this->getURL();
+        $vars['time'] = $this->time;
+        return $this->type->getProcessedText($for, $vars);
     }
 
     public function sendMail(){
