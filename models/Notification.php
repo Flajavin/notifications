@@ -30,6 +30,9 @@ use mpf\WebApp;
 class Notification extends DbModel
 {
 
+    const METHOD_WEB = 1;
+    const METHOD_EMAIL = 2;
+
     /**
      * Used to generate email links
      * @var string
@@ -133,9 +136,10 @@ class Notification extends DbModel
     public function getMessage($for = 'web')
     {
         $vars = json_decode($this->vars_json, true);
-        $vars['url'] = $this->getURL();
-        $vars['time'] = $this->time;
+        $vars['_url'] = $this->getURL();
+        $vars['_time'] = $this->time;
         $vars['_myUserName'] = $this->user->name;
+        $vars['_notificationId'] = $this->id;
         return $this->type->getProcessedText($for, $vars);
     }
 
