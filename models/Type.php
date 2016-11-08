@@ -150,7 +150,7 @@ class Type extends DbModel {
      */
     public function getProcessedText($for, $vars) {
         $text = $this->$for;
-        preg_match_all('/{\$[a-z0-9|:>-_^{}]+}/i', $text, $matches);
+        preg_match_all('/{\$[a-z0-9|:>-_^{}\(\)]+}/i', $text, $matches);
         foreach ($matches[0] as $match) {
             $match = substr($match, 2, strlen($match) - 3);
             $parts = explode('|', $match);
@@ -184,7 +184,7 @@ class Type extends DbModel {
             }
             $text = str_replace("{\$$match}", $dbValue, $text);
         }
-        return $text;
+        return nl2br($text);
     }
 
     public function wantsEmail($userId){
