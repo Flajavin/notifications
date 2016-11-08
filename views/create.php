@@ -21,7 +21,8 @@
         'description',
         [
             'name' => 'email',
-            'type' => 'textarea'
+            'type' => 'textarea',
+            'htmlOptions' => ['rows' => 30]
         ],
         'sms',
         'web',
