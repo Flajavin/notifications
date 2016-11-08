@@ -143,6 +143,7 @@ class Notification extends DbModel
         if (!$this->type->wantsEmail($this->user_id)) { // no need to mail this;
             return true;
         }
+        $this->debug("Send email to #" . $this->user_id);
         $name = App::get()->shortName;
         $this->sent = 1;
         $this->save();
