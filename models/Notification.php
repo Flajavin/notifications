@@ -110,6 +110,20 @@ class Notification extends DbModel
         ]);
     }
 
+    public function markReadFromEmail(){
+        $this->read = 1;
+        $this->read_method = self::METHOD_EMAIL;
+        $this->read_time = date('Y-m-d H:i:s');
+        return $this->save();
+    }
+
+    public function markReadFromWeb(){
+        $this->read = 1;
+        $this->read_method = self::METHOD_WEB;
+        $this->read_time = date('Y-m-d H:i:s');
+        return $this->save();
+    }
+
     /**
      * @return string
      */
