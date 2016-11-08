@@ -22,7 +22,7 @@
         [
             'name' => 'email',
             'type' => 'textarea',
-            'htmlOptions' => ['rows' => 30]
+            'htmlOptions' => ['rows' => 30, 'style' => 'height: 250px']
         ],
         'sms',
         'web',
