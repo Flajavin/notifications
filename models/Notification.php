@@ -145,9 +145,8 @@ class Notification extends DbModel
             return true;
         }
         $this->debug("Send email to #" . $this->user_id);
-        $name = App::get()->shortName;
         $this->sent = 1;
         $this->save();
-        return MailHelper::get()->send($this->user->email, "[$name]" . $this->type->title, $this->getMessage('email'));
+        return MailHelper::get()->send($this->user->email, $this->type->title, $this->getMessage('email'));
     }
 }
