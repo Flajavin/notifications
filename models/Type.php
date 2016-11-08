@@ -133,7 +133,8 @@ class Type extends DbModel {
      * "{$var1|tableName:key>value}" => it will search in the specified table the column with the selected value for the key
      * "{$var2|ModelName:value}" => for models it starts with upper case or it contains \ and it will search by PK. The Value in this case can be a method but must end with ()
      * "{$var3|\others\models\ModelName:value()}" => another model from a different component; it will call value() method for the result
-     * "{$var4}" => simple variable, it will be written as found
+     * "{$var4|\namespace\Class::method()}" => call a method with this parameter;
+     * "{$var5}" => simple variable, it will be written as found
      *
      * Example:
      * Vars: [W
@@ -155,22 +156,28 @@ class Type extends DbModel {
             $parts = explode('|', $match);
             if (count($parts) > 1) {
                 $var  = $parts[0];
-                $details = explode(':', $parts[1]);
-                $tName = $details[0];
-                $details = explode('>', $details);
-                $key = isset($details[1])?$details[0]:null;
-                $value = isset($details[1])?$details[1]:$details[0];
-                if (ucfirst($tName) !=  $tName || false !== strpos($tName, '\\')){ // model;
-                    $model = false !== strpos($tName, '\\')?$tName:'\\app\\models\\' . $tName; /* @var $model \mpf\datasources\sql\DbModel */
-                    if ($key){
-                        $model = $model::findByAttributes([$key => $vars[$var]]);
-                    } else {
-                        $model = $model::findByPk($vars[$var]);
+                $details = explode('::', $parts[1]);
+                if (count($details) == 2){
+                    $dbValue = call_user_func(str_replace('()', '', $parts[1]), $vars[$var]);
+                } else {
+                    $details = explode(':', $parts[1]);
+                    $tName = $details[0];
+                    $details = explode('>', $details);
+                    $key = isset($details[1]) ? $details[0] : null;
+                    $value = isset($details[1]) ? $details[1] : $details[0];
+                    if (ucfirst($tName) != $tName || false !== strpos($tName, '\\')) { // model;
+                        $model = false !== strpos($tName, '\\') ? $tName : '\\app\\models\\' . $tName;
+                        /* @var $model \mpf\datasources\sql\DbModel */
+                        if ($key) {
+                            $model = $model::findByAttributes([$key => $vars[$var]]);
+                        } else {
+                            $model = $model::findByPk($vars[$var]);
+                        }
+                        $dbValue = ('()' != substr($value, -2)) ? $model->$value : $model->$value();
+                    } else { // table;
+                        $dbValue = App::get()->sql()->table($tName)->fields('`' . $value . '`')->where([$key => $vars[$var]])->first();
+                        $dbValue = $dbValue[$value];
                     }
-                    $dbValue = ('()' != substr($value, -2))?$model->$value:$model->$value();
-                } else { // table;
-                    $dbValue = App::get()->sql()->table($tName)->fields('`'. $value . '`')->where([$key => $vars[$var]])->first();
-                    $dbValue = $dbValue[$value];
                 }
             } else {
                 $dbValue = $vars[$match];

@@ -135,6 +135,7 @@ class Notification extends DbModel
         $vars = json_decode($this->vars_json, true);
         $vars['url'] = $this->getURL();
         $vars['time'] = $this->time;
+        $vars['_myUserName'] = $this->user->name;
         return $this->type->getProcessedText($for, $vars);
     }
 
