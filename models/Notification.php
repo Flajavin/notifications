@@ -27,12 +27,21 @@ use mpf\WebApp;
  * @property \app\models\User $user
  * @property \mpf\components\notifications\models\Type $type
  */
-class Notification extends DbModel {
+class Notification extends DbModel
+{
+
+    /**
+     * Used to generate email links
+     * @var string
+     */
+    public $domain;
+
     /**
      * Get database table name.
      * @return string
      */
-    public static function getTableName() {
+    public static function getTableName()
+    {
         return "notifications";
     }
 
@@ -41,7 +50,8 @@ class Notification extends DbModel {
      * to better display labels for inputs or table headers for each column.
      * @return array
      */
-    public static function getLabels() {
+    public static function getLabels()
+    {
         return [
             'id' => 'Id',
             'type_id' => 'Type',
@@ -60,7 +70,8 @@ class Notification extends DbModel {
      * Return list of relations for current model
      * @return array
      */
-    public static function getRelations() {
+    public static function getRelations()
+    {
         return [
             'user' => [DbRelations::BELONGS_TO, '\app\models\User', 'user_id'],
             'type' => [DbRelations::BELONGS_TO, '\mpf\components\notifications\models\Type', 'type_id']
@@ -71,7 +82,8 @@ class Notification extends DbModel {
      * List of rules for current model
      * @return array
      */
-    public static function getRules() {
+    public static function getRules()
+    {
         return [
             ["id, type_id, time, user_id, read, sent, read_method, read_time, url_json, vars_json", "safe", "on" => "search"]
         ];
@@ -81,7 +93,8 @@ class Notification extends DbModel {
      * Gets DataProvider used later by widgets like \mpf\widgets\datatable\Table to manage models.
      * @return \mpf\datasources\sql\DataProvider
      */
-    public function getDataProvider() {
+    public function getDataProvider()
+    {
         $condition = new ModelCondition(['model' => __CLASS__]);
 
         foreach (["id", "type_id", "time", "user_id", "read", "sent", "read_method", "read_time", "url_json", "vars_json"] as $column) {
@@ -97,27 +110,37 @@ class Notification extends DbModel {
     /**
      * @return string
      */
-    public function getURL() {
+    public function getURL()
+    {
         $url = json_decode($this->url_json, true);
         if (is_string($url)) {
             return $url;
         }
-        return WebApp::get()->request()->createURL($url[0], isset($url[1]) ? $url[1] : null, isset($url[2]) ? $url[2] : [], isset($url[3]) ? $url[3] : null);
+        if (is_a(App::get(), WebApp::className())) {
+            return WebApp::get()->request()->createURL($url[0], isset($url[1]) ? $url[1] : null, isset($url[2]) ? $url[2] : [], isset($url[3]) ? $url[3] : null);
+        } else {
+            return $this->domain . (isset($url[3]) ? '/' . $url[3] : '')
+            . '/' . $url[0] . '/' . (isset($url[1]) ? $url[1] : 'index') . '.html'
+            . (isset($url[2]) ? '?' . http_build_query($url[2]) : '');
+        }
+
     }
 
     /**
      * @param string $for Values: web, sms, email, mobile
      * @return string
      */
-    public function getMessage($for = 'web') {
+    public function getMessage($for = 'web')
+    {
         $vars = json_decode($this->vars_json, true);
         $vars['url'] = $this->getURL();
         $vars['time'] = $this->time;
         return $this->type->getProcessedText($for, $vars);
     }
 
-    public function sendMail(){
-        if (!$this->type->wantsEmail($this->user_id)){ // no need to mail this;
+    public function sendMail()
+    {
+        if (!$this->type->wantsEmail($this->user_id)) { // no need to mail this;
             return true;
         }
         $name = App::get()->shortName;
